@@ -1,19 +1,15 @@
 const fs = require('fs')
 const chalk = require('chalk')
 
-const getNotes = function () {
-    return 'Your notes...'
-}
+const getNotes = () => 'Your notes...'
 
 //Add note
 
-const addNote = function (title, body) {
+const addNote = (title, body) => {
     const notes = loadNotes()
 
     //check if the title is already taken
-    const duplicateNotes = notes.filter(function (note) {
-        return note.title === title
-    })
+    const duplicateNotes = notes.filter((note) => note.title === title)
 
     if (duplicateNotes.length === 0) {
         notes.push({
@@ -24,34 +20,16 @@ const addNote = function (title, body) {
         saveNotes(notes)
         console.log(chalk.bgGreen('New note added!'))
     } else {
-        console.log(chalk.bgReg('Note title taken!'))
+        console.log(chalk.bgRed('Note title taken!'))
     }
 }
-
-const saveNotes = function (notes) {
-    const dataJSON = JSON.stringify(notes)
-    fs.writeFileSync('notes.json', dataJSON)
-}
-
-const loadNotes = function () {
-    try {
-        const dataBuffer = fs.readFileSync('notes.json')
-        const dataJSON = dataBuffer.toString()
-        return JSON.parse(dataJSON)
-    } catch (e) {
-        return []
-    }
-}
-
 
 //Remove note
 
-const removeNote = function (title) {
+const removeNote = (title) => {
     const notes = loadNotes()
     //check if the title exists
-    const notesToKeep = notes.filter(function (note) {
-        return note.title !== title
-    })
+    const notesToKeep = notes.filter((note) => note.title !== title)
 
     //check if the note has been removed
     if (notes.length > notesToKeep.length) {
@@ -59,6 +37,22 @@ const removeNote = function (title) {
         saveNotes(notesToKeep)
     } else {
         console.log(chalk.bgRed('No note found!'))
+    }
+}
+
+
+const saveNotes = (notes) => {
+    const dataJSON = JSON.stringify(notes)
+    fs.writeFileSync('notes.json', dataJSON)
+}
+
+const loadNotes = () => {
+    try {
+        const dataBuffer = fs.readFileSync('notes.json')
+        const dataJSON = dataBuffer.toString()
+        return JSON.parse(dataJSON)
+    } catch (e) {
+        return []
     }
 }
 
