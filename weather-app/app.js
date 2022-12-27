@@ -1,5 +1,9 @@
-const request = require('request')
+// const request = require('request')
 const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
+const yargs = require('yargs')
+
+yargs.version('1.1.0')
 // const url = 'http://api.weatherstack.com/current?access_key=d8fd5ba6638f567ebd87c0b6e970cc3d&query=&units=m'
 
 
@@ -39,9 +43,38 @@ const geocode = require('./utils/geocode')
 //     }
 // })
 
+const address = process.argv[2]
+
+if (!address) {
+    console.log('Please provide an address')
+} else {
+
+    geocode(address, (error, data) => {
+        if (error) {
+            return console.log(error)
+        }
+
+        forecast(data.latitude, data.longitude, (error, fdata) => {
+            if (error) {
+                return console.log(error)
+            } 
+
+            console.log(data.location)
+            console.log(fdata)
+        })
+    })
+}
 
 
-geocode('Bangkok', (error, data) => {
-    console.log('Error', error)
-    console.log('Data', data)
-})
+
+
+//
+// Goal: Create a reusable function for getting the forecast
+//
+// 1. Setup the "forecast" function in utils/forecast.js
+// 2. Require the function in app.js and call it as shown below
+// 3. The forecast function should have three potential calls to callback:
+//    - Low level error, pass string for error
+//    - Coordinate error, pass string for error
+//    - Success, pass forecast string for data (same format as from before)
+
